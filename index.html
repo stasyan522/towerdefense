@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tower Defense - LOGIKASTAS STUDIO</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0e2a 0%, #1a1f4b 50%, #0a0e2a 100%);
+            color: #ffffff;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Анімація фону з зірками */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .star {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            animation: twinkle 5s infinite ease-in-out;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+
+        /* Контейнер */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Заголовок */
+        header {
+            text-align: center;
+            padding: 60px 0 40px;
+            position: relative;
+        }
+
+        .logo {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, #1e90ff, #00ced1, #9370db);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 20px rgba(30, 144, 255, 0.5);
+            margin-bottom: 20px;
+            animation: glow 3s infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 10px rgba(30, 144, 255, 0.5); }
+            to { text-shadow: 0 0 20px rgba(30, 144, 255, 0.8), 0 0 30px rgba(30, 144, 255, 0.6); }
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            color: #a0a0e0;
+            margin-bottom: 40px;
+            font-weight: 300;
+        }
+
+        /* Ігрові секції */
+        .game-section {
+            background: rgba(16, 18, 40, 0.7);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(100, 100, 200, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 25px;
+            color: #7fffd4;
+            text-align: center;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #7fffd4, transparent);
+        }
+
+        /* Картки */
+        .cards-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .card {
+            background: linear-gradient(145deg, #1a1f4b, #15193a);
+            border-radius: 15px;
+            width: 300px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid rgba(100, 150, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #1e90ff, #00ced1);
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #7fffd4;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #e0e0ff;
+        }
+
+        .card-description {
+            color: #b0b0d0;
+            line-height: 1.6;
+        }
+
+        /* Кнопки */
+        .buttons-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .btn {
+            padding: 15px 35px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #1e90ff, #00ced1);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: rgba(30, 144, 255, 0.2);
+            color: #a0d0ff;
+            border: 2px solid #1e90ff;
+        }
+
+        .btn-download {
+            background: linear-gradient(45deg, #ff6b6b, #ffa500);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        .btn i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        /* Характеристики */
+        .stats-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .stat {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #7fffd4;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: #b0b0d0;
+            font-size: 1.1rem;
+        }
+
+        /* Скріншоти */
+        .screenshots-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .screenshot {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s;
+            border: 2px solid rgba(100, 150, 255, 0.3);
+        }
+
+        .screenshot:hover {
+            transform: scale(1.03);
+            border-color: #7fffd4;
+        }
+
+        .screenshot-caption {
+            text-align: center;
+            margin-top: 10px;
+            color: #b0b0d0;
+            font-style: italic;
+        }
+
+        /* Ігрові механіки */
+        .mechanics-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .mechanic {
+            background: rgba(30, 35, 70, 0.6);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #7fffd4;
+        }
+
+        .mechanic-title {
+            font-size: 1.3rem;
+            color: #7fffd4;
+            margin-bottom: 10px;
+        }
+
+        /* Футер */
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            margin-top: 60px;
+            border-top: 1px solid rgba(100, 100, 200, 0.2);
+            color: #8080c0;
+        }
+
+        .studio {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: #a0a0e0;
+        }
+
+        /* Адаптивність */
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 2.5rem;
+            }
+            
+            .card {
+                width: 100%;
+                max-width: 350px;
+            }
+            
+            .buttons-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .stats-container {
+                flex-direction: column;
+            }
+        }
+
+        /* Анімації появи */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s, transform 0.8s;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Стилі для іконок */
+        .icon-download::before {
+            content: "⬇️";
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Анімований фон з зірками -->
+    <div class="stars" id="stars"></div>
+
+    <div class="container">
+        <header>
+            <h1 class="logo fade-in">TOWER DEFENSE</h1>
+            <p class="subtitle fade-in">Захисти своє королівство від навали монстрів</p>
+        </header>
+
+        <section class="game-section fade-in">
+            <h2 class="section-title">Про гру</h2>
+            <p style="text-align: center; line-height: 1.6; color: #b0b0d0; max-width: 800px; margin: 0 auto;">
+                Tower Defense - це захоплива стратегічна гра, розроблена студією LOGIKASTAS, де гравцям належить захищати своє королівство від хвиль монстрів, використовуючи різноманітні оборонні споруди. Побудуйте потужну оборону, покращуйте башти та розвивайте стратегію, щоб зупинити ворогів!
+            </p>
+        </section>
+
+        <section class="game-section fade-in">
+            <h2 class="section-title">Ігрові скріншоти</h2>
+            <div class="screenshots-container">
+                <div>
+                    <img src="Знімок екрана 2025-10-17 183950.png" alt="Головне меню гри" class="screenshot">
+                    <p class="screenshot-caption">Головне меню гри</p>
+                </div>
+                <div>
+                    <img src="Знімок екрана 2025-10-17 184003.png" alt="Вибір карти" class="screenshot">
+                    <p class="screenshot-caption">Вибір ігрової локації</p>
+                </div>
+                <div>
+                    <img src="Знімок екрана 2025-10-17 184027.png" alt="Ігровий процес" class="screenshot">
+                    <p class="screenshot-caption">Активний ігровий процес</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="game-section fade-in">
+            <h2 class="section-title">Особливості гри</h2>
+            <div class="cards-container">
+                <div class="card">
+                    <div class="card-icon">🏰</div>
+                    <h3 class="card-title">Потужні башти</h3>
+                    <p class="card-description">Покращуйте та комбінуйте різні типи башт для ефективної оборони від ворогів. Кожна башта має унікальні характеристики та можливості покращення.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">👹</div>
+                    <h3 class="card-title">Різноманітні вороги</h3>
+                    <p class="card-description">Звичайні монстри, швидкі рейдери, танки та могутні боси з унікальними здібностями. Кожен тип вимагає особливого підходу до оборони.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">🗺️</div>
+                    <h3 class="card-title">Унікальні карти</h3>
+                    <p class="card-description">Рівнини, гори та руїни міста - кожна локація має свої особливості та тактики. Адаптуйте стратегію під рельєф місцевості.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="game-section fade-in">
+            <h2 class="section-title">Ігрові механіки</h2>
+            <div class="mechanics-container">
+                <div class="mechanic">
+                    <h3 class="mechanic-title">Ресурси та управління</h3>
+                    <p>Керуйте грошима ($300 на старті) для будівництва башт, відстежуйте життя (25) та рахунок для досягнення високих результатів. Ефективне управління ресурсами - ключ до успіху.</p>
+                </div>
+                <div class="mechanic">
+                    <h3 class="mechanic-title">Система хвиль</h3>
+                    <p>З кожним рівнем складність зростає - монстрів стає більше, вони стають міцнішими та отримують нові здібності. Готуйтеся до 30+ хвиль монстрів!</p>
+                </div>
+                <div class="mechanic">
+                    <h3 class="mechanic-title">Покращення башт</h3>
+                    <p>Апгрейдіть башти для збільшення шкоди, радіусу атаки та швидкострільності. Відкривайте геройські башти з унікальними навичками та спеціальними атаками.</p>
+                </div>
+                <div class="mechanic">
+                    <h3 class="mechanic-title">Секрети та пасхалки</h3>
+                    <p>Досліджуйте карти, щоб знайти приховані секрети, які допоможуть у боротьбі з ворогами. Користуйтеся ПКМ для відкриття пасхалок!</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="game-section fade-in">
+            <h2 class="section-title">Ігрова статистика</h2>
+            <div class="stats-container">
+                <div class="stat">
+                    <div class="stat-value" id="towers-count">0</div>
+                    <div class="stat-label">Типів башт</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="monsters-count">0</div>
+                    <div class="stat-label">Ворогів</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="maps-count">0</div>
+                    <div class="stat-label">Карт</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="levels-count">0</div>
+                    <div class="stat-label">Рівнів складності</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="game-section fade-in">
+            <h2 class="section-title">Завантажити гру</h2>
+            <div class="buttons-container">
+                <a href="https://drive.google.com/uc?export=download&id=1Bsmv8TvE-uK-NTC9BdEgL--DxOV_ALc4" class="btn btn-download" download>
+                    <span class="icon-download"></span>Завантажити гру
+                </a>
+            </div>
+            <p style="text-align: center; color: #b0b0d0; margin-top: 20px; font-size: 0.9rem;">
+                Розмір файлу: ~29 MB | Версія: 1.0 | Платформа: Windows
+            </p>
+        </section>
+
+        <section class="game-section fade-in">
+            <h2 class="section-title">Почати гру</h2>
+            <div class="buttons-container">
+                <button class="btn btn-primary" id="start-game">Почати гру</button>
+                <button class="btn btn-secondary" id="select-level">Вибір рівня</button>
+                <button class="btn btn-secondary" id="view-stats">Статистика</button>
+                <button class="btn btn-secondary" id="settings">Налаштування</button>
+            </div>
+        </section>
+
+        <footer>
+            <div class="studio">LOGIKASTAS STUDIO</div>
+            <p>© 2025 Всі права захищені</p>
+        </footer>
+    </div>
+
+    <script>
+        // Створення зірочок для фону
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            const starCount = 150;
+            
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                
+                // Випадкові властивості зірок
+                const size = Math.random() * 3;
+                const posX = Math.random() * 100;
+                const posY = Math.random() * 100;
+                const delay = Math.random() * 5;
+                const duration = 3 + Math.random() * 7;
+                
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.left = `${posX}%`;
+                star.style.top = `${posY}%`;
+                star.style.animationDelay = `${delay}s`;
+                star.style.animationDuration = `${duration}s`;
+                
+                starsContainer.appendChild(star);
+            }
+        }
+
+        // Анімація чисел
+        function animateValue(element, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                const value = Math.floor(progress * (end - start) + start);
+                element.textContent = value;
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        // Анімація появи елементів при скролі
+        function checkVisibility() {
+            const elements = document.querySelectorAll('.fade-in');
+            
+            elements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < window.innerHeight - elementVisible) {
+                    element.classList.add('visible');
+                }
+            });
+        }
+
+        // Обробники подій для кнопок
+        document.getElementById('start-game').addEventListener('click', function() {
+            alert('Запуск гри... Відкриття вибору карти...');
+            // Тут буде код для переходу до вибору карти
+        });
+
+        document.getElementById('select-level').addEventListener('click', function() {
+            alert('Відкриття вибору рівня...');
+        });
+
+        document.getElementById('view-stats').addEventListener('click', function() {
+            alert('Перегляд статистики...');
+        });
+
+        document.getElementById('settings').addEventListener('click', function() {
+            alert('Відкриття налаштувань...');
+        });
+
+        // Ініціалізація при завантаженні сторінки
+        window.addEventListener('load', function() {
+            createStars();
+            
+            // Запуск анімації чисел
+            setTimeout(() => {
+                animateValue(document.getElementById('towers-count'), 0, 4, 2000);
+                animateValue(document.getElementById('monsters-count'), 0, 12, 2000);
+                animateValue(document.getElementById('maps-count'), 0, 3, 2000);
+                animateValue(document.getElementById('levels-count'), 0, 3, 2000);
+            }, 500);
+            
+            checkVisibility();
+        });
+
+        // Перевірка видимості при скролі
+        window.addEventListener('scroll', checkVisibility);
+    </script>
+</body>
+</html>
